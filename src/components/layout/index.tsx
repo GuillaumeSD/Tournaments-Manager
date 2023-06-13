@@ -28,7 +28,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
         darkMode={useDarkMode}
         switchDarkMode={() => setDarkMode((val) => !val)}
       />
-      <main style={{ margin: "2em" }}>{children}</main>
+      <main style={{ margin: "2em 2vw" }}>{children}</main>
     </ThemeProvider>
   );
 }

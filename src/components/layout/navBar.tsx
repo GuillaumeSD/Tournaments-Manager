@@ -35,7 +35,12 @@ export default function NavBar({ darkMode, switchDarkMode }: Props) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Tournoi à la mêlée
           </Typography>
-          <IconButton color="inherit">
+          <IconButton
+            color="inherit"
+            onClick={() =>
+              window.open("https://github.com/GuillaumeSD/tournaments")
+            }
+          >
             <Icon icon="mdi:github" />
           </IconButton>
           <IconButton sx={{ ml: 1 }} onClick={switchDarkMode} color="inherit">

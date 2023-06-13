@@ -1,4 +1,4 @@
-import { Player, PlayersObject } from "@/types/tournamentTypes";
+import { Player, PlayersObject } from "../types/tournamentTypes";
 import { createContext, useContext, useState } from "react";
 
 export type TournamentContextType = {

@@ -2,7 +2,6 @@ import { Icon } from "@iconify/react";
 import {
   Box,
   Drawer,
-  Link,
   List,
   ListItem,
   ListItemButton,
@@ -10,6 +9,7 @@ import {
   ListItemText,
   Toolbar,
 } from "@mui/material";
+import NavLink from "../NavLink";
 
 const MenuOptions = [
   { text: "Joueurs", icon: "mdi:account-group", href: "/players" },
@@ -30,19 +30,14 @@ export default function NavMenu({ open, onClose }: Props) {
         <List>
           {MenuOptions.map(({ text, icon, href }) => (
             <ListItem key={text} disablePadding>
-              <Link
-                href={href}
-                underline="none"
-                color="inherit"
-                sx={{ width: "100%" }}
-              >
+              <NavLink href={href}>
                 <ListItemButton>
                   <ListItemIcon>
                     <Icon icon={icon} height="1.5em" />
                   </ListItemIcon>
                   <ListItemText primary={text} />
                 </ListItemButton>
-              </Link>
+              </NavLink>
             </ListItem>
           ))}
         </List>

@@ -1,5 +1,5 @@
-import Layout from "@/components/layout/layout";
-import { TournamentProvider } from "@/contexts/tournamentContext";
+import Layout from "../components/layout";
+import { TournamentProvider } from "../contexts/tournamentContext";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
