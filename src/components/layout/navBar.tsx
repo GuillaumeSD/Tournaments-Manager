@@ -3,9 +3,10 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavMenu from "./navMenu";
 import { Icon } from "@iconify/react";
+import { useRouter } from "next/router";
 
 interface Props {
   darkMode: boolean;
@@ -14,6 +15,11 @@ interface Props {
 
 export default function NavBar({ darkMode, switchDarkMode }: Props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [router.pathname]);
 
   return (
     <Box sx={{ flexGrow: 1, display: "flex" }}>

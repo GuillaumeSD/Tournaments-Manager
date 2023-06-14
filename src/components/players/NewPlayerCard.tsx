@@ -15,7 +15,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   open: boolean;
@@ -24,11 +23,11 @@ interface Props {
 
 export default function NewPlayerDialog({ open, onClose }: Props) {
   const [name, setName] = useState("");
-  const [pool, setPool] = useState<number | null>(null);
-  const { setPlayer } = useTournament();
+  const [pool, setPool] = useState<number | "">("");
+  const { addPlayer } = useTournament();
 
   const handleAddPlayer = () => {
-    if (!setPlayer) throw new Error("Unable to set player");
+    if (!addPlayer) throw new Error("Unable to add player");
     if (!name) {
       alert("Le nom du joueur est obligatoire !");
       throw new Error("Player name is invalid");
@@ -37,8 +36,7 @@ export default function NewPlayerDialog({ open, onClose }: Props) {
       alert("La poule du joueur doit être comprise entre 1 et 6 !");
       throw new Error("Player pool is invalid");
     }
-    setPlayer({
-      id: uuidv4(),
+    addPlayer({
       name,
       pool,
       score: 0,
@@ -48,7 +46,7 @@ export default function NewPlayerDialog({ open, onClose }: Props) {
 
   const handleClose = () => {
     setName("");
-    setPool(null);
+    setPool("");
     onClose();
   };
 
@@ -76,6 +74,7 @@ export default function NewPlayerDialog({ open, onClose }: Props) {
             <Select
               labelId="dialog-select-label"
               id="dialog-select"
+              displayEmpty
               input={<OutlinedInput label="Poule" />}
               value={pool}
               onChange={(e) => {
@@ -85,9 +84,9 @@ export default function NewPlayerDialog({ open, onClose }: Props) {
                 setPool(e.target.value);
               }}
             >
-              {[1, 2, 3, 4, 5, 6].map((poule) => (
-                <MenuItem value={poule} key={poule}>
-                  {poule}
+              {[null, 1, 2, 3, 4, 5, 6].map((poule) => (
+                <MenuItem value={poule ?? ""} key={poule ?? "empty-val"}>
+                  {poule ?? "Poule"}
                 </MenuItem>
               ))}
             </Select>

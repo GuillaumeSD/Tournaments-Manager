@@ -1,11 +1,14 @@
-import { Player, PlayersObject } from "../types/tournamentTypes";
-import { createContext, useContext, useState } from "react";
+import { createDatabase } from "../helpers/localDatabase";
+import { Player, Round } from "../types/tournamentTypes";
+import { createContext, useContext } from "react";
 
 export type TournamentContextType = {
-  players: PlayersObject;
+  players: Player[];
+  addPlayer: (player: Omit<Player, "id">) => void;
   setPlayer: (player: Player) => void;
-  removePlayer: (playerId: string) => void;
-  reset: () => void;
+  removePlayer: (playerId: number) => void;
+  rounds: Round[];
+  tournamentReset: () => void;
 };
 
 const TournamentContext = createContext<Partial<TournamentContextType>>({});
@@ -19,34 +22,27 @@ export function TournamentProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [players, setPlayers] = useState<PlayersObject>({});
+  const {
+    elements: players,
+    add: addPlayer,
+    set: setPlayer,
+    remove: removePlayer,
+    reset: resetPlayers,
+  } = createDatabase<Player>("TournamentPlayers");
 
-  const setPlayer = (player: Player) => {
-    setPlayers((prev) => {
-      return {
-        ...prev,
-        [player.id]: player,
-      };
-    });
-  };
+  const { elements: rounds } = createDatabase<Round>("TournamentRounds");
 
-  const removePlayer = (playerId: string) => {
-    setPlayers((prev) => {
-      const newPlayers = { ...prev };
-      delete newPlayers[playerId];
-      return newPlayers;
-    });
-  };
-
-  const reset = () => {
-    setPlayers({});
+  const tournamentReset = () => {
+    resetPlayers();
   };
 
   const value: TournamentContextType = {
     players,
+    addPlayer,
     setPlayer,
     removePlayer,
-    reset,
+    rounds,
+    tournamentReset,
   };
 
   return (

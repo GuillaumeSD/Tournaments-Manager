@@ -1,10 +1,21 @@
 export interface Player {
-  id: string;
+  id: number;
   name: string;
   score: number;
   pool: number;
 }
 
-export interface PlayersObject {
-  [id: string]: Player | undefined;
+export interface Team {
+  id: number;
+  players: Player[];
+}
+
+export interface Match {
+  id: number;
+  teams: [Team, Team];
+}
+
+export interface Round {
+  id: number;
+  matches: Match[];
 }

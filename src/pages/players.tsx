@@ -32,7 +32,7 @@ export default function Players() {
   const [openNewPlayerDialog, setOpenNewPlayerDialog] = useState(false);
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    if (!removePlayer || typeof id !== "string")
+    if (!removePlayer || typeof id !== "number")
       throw new Error("Unable to remove player");
     removePlayer(id);
   };
