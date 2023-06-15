@@ -85,8 +85,6 @@ export const buildNewRound = (
     teamId = 0;
   }
 
-  console.log(JSON.stringify(teams.map((team) => team.players.length)));
-
   while (
     playersByPool.some((pool) => pool.length > 0) &&
     teams.some((team) => team.players.length < 6)
