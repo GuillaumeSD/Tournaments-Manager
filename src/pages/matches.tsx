@@ -14,12 +14,15 @@ export default function Matches() {
   }, [roundNb, rounds]);
 
   const handleNextRoundClick = () => {
-    if (!setNewRound) {
+    if (!setNewRound || !rounds) {
       console.error("setNewRound is not defined");
       return;
     }
     const nextRoundNb = roundNb + 1;
-    setNewRound(nextRoundNb.toString());
+    const nextRound = rounds[nextRoundNb.toString()];
+    if (!nextRound) {
+      setNewRound(nextRoundNb.toString());
+    }
     setRoundNb(nextRoundNb);
   };
 
