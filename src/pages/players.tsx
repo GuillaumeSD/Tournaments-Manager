@@ -32,12 +32,12 @@ export default function Players() {
   const [openNewPlayerDialog, setOpenNewPlayerDialog] = useState(false);
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    if (!removePlayer || typeof id !== "number")
+    if (!removePlayer || typeof id !== "string")
       throw new Error("Unable to remove player");
     removePlayer(id);
   };
 
-  const processRowUpdate = (newRow: GridRowModel) => {
+  const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     if (!setPlayer) throw new Error("Unable to set player");
     const player = {
       id: newRow.id,
@@ -47,11 +47,11 @@ export default function Players() {
     } as Player;
     if (!player.name) {
       alert("Le nom du joueur est obligatoire !");
-      throw new Error("Player name is invalid");
+      return oldRow;
     }
     if (!player.pool || player.pool < 1 || player.pool > 6) {
       alert("La poule du joueur doit être comprise entre 1 et 6 !");
-      throw new Error("Player pool is invalid");
+      return oldRow;
     }
     setPlayer(player);
     return newRow;
@@ -119,7 +119,7 @@ export default function Players() {
             Ajouter un joueur
           </Button>
         </Grid>
-        <Grid item maxWidth="100%">
+        <Grid item maxWidth="100%" sx={{ minWidth: "50px" }}>
           <DataGrid
             aria-label="Liste des joueurs"
             rows={players ? (Object.values(players) as Player[]) : []}

@@ -1,19 +1,18 @@
 import { useLocalStorage } from "./localStorage";
+import { v4 as uuid } from "uuid";
 
-export function createDatabase<T extends { id: number }>(
+export function createDatabase<T extends { id: string }>(
   localStorageKey: string
 ): {
-  elements: T[];
-  add: (el: Omit<T, "id">) => void;
-  set: (el: T) => void;
-  remove: (playerId: number) => void;
+  elements: Record<string, T | undefined>;
+  add: (element: Omit<T, "id">) => void;
+  set: (element: T) => void;
+  remove: (elementId: string) => void;
   reset: () => void;
 } {
-  const [elements, setElements] = useLocalStorage<T[]>(localStorageKey, []);
-
-  const add = (element: Omit<T, "id">) => {
-    setElements((prev) => [...prev, { ...element, id: prev.length } as T]);
-  };
+  const [elements, setElements] = useLocalStorage<
+    Record<string, T | undefined>
+  >(localStorageKey, {});
 
   const set = (element: T) => {
     setElements((prev) => {
@@ -22,15 +21,20 @@ export function createDatabase<T extends { id: number }>(
     });
   };
 
-  const remove = (elementId: number) => {
+  const add = (element: Omit<T, "id">) => {
+    const newElement = { ...element, id: uuid() } as T;
+    set(newElement);
+  };
+
+  const remove = (elementId: string) => {
     setElements((prev) => {
-      prev.splice(elementId, 1);
-      return prev.map((el, i) => ({ ...el, id: i }));
+      const { [elementId]: _, ...rest } = prev;
+      return rest;
     });
   };
 
   const reset = () => {
-    setElements([]);
+    setElements({});
   };
 
   return {

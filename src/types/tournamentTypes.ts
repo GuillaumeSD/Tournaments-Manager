@@ -1,5 +1,5 @@
 export interface Player {
-  id: number;
+  id: string;
   name: string;
   score: number;
   pool: number;
@@ -7,7 +7,7 @@ export interface Player {
 
 export interface Team {
   id: number;
-  players: Player[];
+  players: string[];
 }
 
 export interface Match {
@@ -16,6 +16,6 @@ export interface Match {
 }
 
 export interface Round {
-  id: number;
+  id: string;
   matches: Match[];
 }

@@ -3,11 +3,11 @@ import { Player, Round } from "../types/tournamentTypes";
 import { createContext, useContext } from "react";
 
 export type TournamentContextType = {
-  players: Player[];
+  players: Record<string, Player | undefined>;
   addPlayer: (player: Omit<Player, "id">) => void;
   setPlayer: (player: Player) => void;
-  removePlayer: (playerId: number) => void;
-  rounds: Round[];
+  removePlayer: (playerId: string) => void;
+  rounds: Record<string, Round | undefined>;
   tournamentReset: () => void;
 };
 
@@ -30,9 +30,11 @@ export function TournamentProvider({
     reset: resetPlayers,
   } = createDatabase<Player>("TournamentPlayers");
 
-  const { elements: rounds } = createDatabase<Round>("TournamentRounds");
+  const { elements: rounds, reset: resetRounds } =
+    createDatabase<Round>("TournamentRounds");
 
   const tournamentReset = () => {
+    resetRounds();
     resetPlayers();
   };
 
