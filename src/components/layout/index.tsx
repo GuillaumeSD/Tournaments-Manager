@@ -1,15 +1,10 @@
-import {
-  CssBaseline,
-  ThemeProvider,
-  createTheme,
-  useMediaQuery,
-} from "@mui/material";
-import { useMemo, useState } from "react";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { useMemo } from "react";
 import NavBar from "./navBar";
+import { useLocalStorage } from "../../helpers/localStorage";
 
 export default function Layout({ children }: { children?: React.ReactNode }) {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const [useDarkMode, setDarkMode] = useState(prefersDarkMode);
+  const [useDarkMode, setDarkMode] = useLocalStorage("useDarkMode", false);
 
   const theme = useMemo(
     () =>

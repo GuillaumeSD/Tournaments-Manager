@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import NavMenu from "./navMenu";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/router";
+import NavLink from "../NavLink";
 
 interface Props {
   darkMode: boolean;
@@ -38,9 +39,11 @@ export default function NavBar({ darkMode, switchDarkMode }: Props) {
           >
             <Icon icon="mdi:menu" />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Tournoi à la mêlée
-          </Typography>
+          <NavLink href="/">
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Tournoi à la mêlée
+            </Typography>
+          </NavLink>
           <IconButton
             color="inherit"
             onClick={() =>

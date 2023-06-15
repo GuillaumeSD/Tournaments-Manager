@@ -12,6 +12,7 @@ import {
 import NavLink from "../NavLink";
 
 const MenuOptions = [
+  { text: "Paramètres", icon: "mdi:cog", href: "/" },
   { text: "Joueurs", icon: "mdi:account-group", href: "/players" },
   { text: "Matchs", icon: "mdi:tournament", href: "/matches" },
   { text: "Classement", icon: "mdi:podium", href: "/ranking" },
