@@ -68,8 +68,11 @@ export const buildNewRound = (
   let poolId = 0;
 
   while (poolId < 6) {
-    while (teamId < teams.length) {
-      let scopePoolId = poolId;
+    while (poolId < 5 && playersByPool[poolId].length === 0) {
+      poolId++;
+    }
+    let scopePoolId = poolId;
+    while (teamId < teams.length && scopePoolId < 6) {
       const player = playersByPool[scopePoolId].shift();
       if (player) {
         teams[teamId].players.push(player.id);
@@ -82,6 +85,8 @@ export const buildNewRound = (
     teamId = 0;
   }
 
+  console.log(JSON.stringify(teams.map((team) => team.players.length)));
+
   while (
     playersByPool.some((pool) => pool.length > 0) &&
     teams.some((team) => team.players.length < 6)
@@ -92,7 +97,11 @@ export const buildNewRound = (
       }
       return index;
     }, 0);
-    for (let i = 0; i < teams.length; i++) {
+    let currentTeamStartId = teams.findIndex(
+      (team) => team.players.length < teams[0].players.length
+    );
+    currentTeamStartId = currentTeamStartId > 0 ? currentTeamStartId : 0;
+    for (let i = currentTeamStartId; i < teams.length; i++) {
       const player = playersByPool[currentPoolId].shift();
       if (player) {
         teams[i].players.push(player.id);

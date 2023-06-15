@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type SetValue<T> = Dispatch<SetStateAction<T>>;
 
@@ -6,15 +6,14 @@ export function useLocalStorage<T>(
   key: string,
   initialValue: T
 ): [T, SetValue<T>] {
-  // Prevent build error "window is undefined"
-  if (typeof window === "undefined") {
-    return [initialValue, () => {}];
-  }
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
 
-  const item = window.localStorage.getItem(key);
-  const initValue = item ? parseJSON<T>(item) : initialValue;
-
-  const [storedValue, setStoredValue] = useState<T>(initValue);
+  useEffect(() => {
+    const item = window.localStorage.getItem(key);
+    if (item) {
+      setStoredValue(parseJSON<T>(item));
+    }
+  }, [key]);
 
   const setValue: SetValue<T> = (value) => {
     const newValue = value instanceof Function ? value(storedValue) : value;

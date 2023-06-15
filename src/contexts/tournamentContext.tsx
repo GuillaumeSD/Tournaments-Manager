@@ -1,6 +1,8 @@
+import { buildNewRound } from "../helpers/round";
 import { createDatabase } from "../helpers/localDatabase";
 import { Player, Round } from "../types/tournamentTypes";
 import { createContext, useContext } from "react";
+import { v4 as uuid } from "uuid";
 
 export type TournamentContextType = {
   players: Record<string, Player | undefined>;
@@ -8,6 +10,7 @@ export type TournamentContextType = {
   setPlayer: (player: Player) => void;
   removePlayer: (playerId: string) => void;
   rounds: Record<string, Round | undefined>;
+  setNewRound: (roundId: string) => void;
   tournamentReset: () => void;
 };
 
@@ -24,14 +27,26 @@ export function TournamentProvider({
 }) {
   const {
     elements: players,
-    add: addPlayer,
     set: setPlayer,
     remove: removePlayer,
     reset: resetPlayers,
   } = createDatabase<Player>("TournamentPlayers");
 
-  const { elements: rounds, reset: resetRounds } =
-    createDatabase<Round>("TournamentRounds");
+  const addPlayer = (player: Omit<Player, "id">) => {
+    const id = uuid();
+    setPlayer({ ...player, id });
+  };
+
+  const {
+    elements: rounds,
+    reset: resetRounds,
+    set: setRound,
+  } = createDatabase<Round>("TournamentRounds");
+
+  const setNewRound = (roundId: string) => {
+    const newRound = buildNewRound(Object.values(players) as Player[], 5);
+    setRound({ ...newRound, id: roundId });
+  };
 
   const tournamentReset = () => {
     resetRounds();
@@ -44,6 +59,7 @@ export function TournamentProvider({
     setPlayer,
     removePlayer,
     rounds,
+    setNewRound,
     tournamentReset,
   };
 
