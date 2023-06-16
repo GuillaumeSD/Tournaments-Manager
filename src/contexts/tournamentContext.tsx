@@ -13,10 +13,10 @@ export type TournamentContextType = {
   rounds: Record<string, Round | undefined>;
   setNewRound: (roundId: string) => void;
   tournamentReset: () => void;
-  fieldNb: number;
-  setFieldNb: (fieldNb: number) => void;
-  playerNbByTeam: number;
-  setPlayerNbByTeam: (playerNbByTeam: number) => void;
+  matchesNb: number;
+  setMatchesNb: (matchesNb: number) => void;
+  playersNbByTeam: number;
+  setPlayersNbByTeam: (playersNbByTeam: number) => void;
 };
 
 const TournamentContext = createContext<Partial<TournamentContextType>>({});
@@ -30,9 +30,9 @@ export function TournamentProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [fieldNb, setFieldNb] = useLocalStorage("fieldNb", 6);
-  const [playerNbByTeam, setPlayerNbByTeam] = useLocalStorage(
-    "playerNbByTeam",
+  const [matchesNb, setMatchesNb] = useLocalStorage("matchesNb", 6);
+  const [playersNbByTeam, setPlayersNbByTeam] = useLocalStorage(
+    "playersNbByTeam",
     6
   );
 
@@ -55,7 +55,11 @@ export function TournamentProvider({
   } = createDatabase<Round>("TournamentRounds");
 
   const setNewRound = (roundId: string) => {
-    const newRound = buildNewRound(Object.values(players) as Player[], 5);
+    const newRound = buildNewRound(
+      Object.values(players) as Player[],
+      matchesNb,
+      playersNbByTeam
+    );
     setRound({ ...newRound, id: roundId });
   };
 
@@ -64,10 +68,10 @@ export function TournamentProvider({
     resetPlayers();
   };
 
-  const handleSetPlayerNbByTeam = (newValue: number) => {
-    if (playerNbByTeam === newValue) return;
+  const handleSetPlayersNbByTeam = (newValue: number) => {
+    if (playersNbByTeam === newValue) return;
     tournamentReset();
-    setPlayerNbByTeam(fieldNb);
+    setPlayersNbByTeam(matchesNb);
   };
 
   const value: TournamentContextType = {
@@ -78,10 +82,10 @@ export function TournamentProvider({
     rounds,
     setNewRound,
     tournamentReset,
-    fieldNb,
-    setFieldNb,
-    playerNbByTeam,
-    setPlayerNbByTeam: handleSetPlayerNbByTeam,
+    matchesNb,
+    setMatchesNb,
+    playersNbByTeam,
+    setPlayersNbByTeam: handleSetPlayersNbByTeam,
   };
 
   return (

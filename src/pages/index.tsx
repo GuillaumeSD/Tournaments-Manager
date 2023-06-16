@@ -1,4 +1,5 @@
 import { useTournament } from "@/contexts/tournamentContext";
+import { Icon } from "@iconify/react";
 import {
   Autocomplete,
   FormControl,
@@ -11,9 +12,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { yellow } from "@mui/material/colors";
 
 export default function HomePage() {
-  const { fieldNb, setFieldNb, playerNbByTeam, setPlayerNbByTeam } =
+  const { matchesNb, setMatchesNb, playersNbByTeam, setPlayersNbByTeam } =
     useTournament();
 
   return (
@@ -28,12 +30,24 @@ export default function HomePage() {
         item
         container
         xs={12}
-        lg={6}
+        lg={4}
         spacing={4}
         justifyContent="center"
         alignItems="center"
         marginBottom={2}
       >
+        <Grid
+          item
+          container
+          xs={12}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Typography variant="h5" component="h1" marginRight={1}>
+            Paramètres
+          </Typography>
+          <Icon icon={"mdi:cog"} height="1.5em" />
+        </Grid>
         <Grid
           item
           container
@@ -72,9 +86,9 @@ export default function HomePage() {
                 inputProps={{ ...params.inputProps, min: 1, max: 99 }}
               />
             )}
-            value={fieldNb}
+            value={matchesNb}
             getOptionLabel={(option) => option.toString()}
-            onChange={(_, val) => setFieldNb?.(val ?? 6)}
+            onChange={(_, val) => setMatchesNb?.(val ?? 6)}
             sx={{ maxWidth: "20em" }}
             fullWidth
           />
@@ -91,20 +105,37 @@ export default function HomePage() {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Nombre de joueurs par équipe"
+                label="Nombre max de joueurs par équipe"
                 type="number"
                 inputProps={{ ...params.inputProps, min: 1, max: 12 }}
               />
             )}
-            value={playerNbByTeam}
+            value={playersNbByTeam}
             getOptionLabel={(option) => option.toString()}
-            onChange={(_, val) => setPlayerNbByTeam?.(val ?? 6)}
+            onChange={(_, val) => setPlayersNbByTeam?.(val ?? 6)}
             sx={{ maxWidth: "20em" }}
             fullWidth
           />
+          <Grid
+            item
+            container
+            xs={12}
+            justifyContent="center"
+            alignItems="center"
+            marginTop={0.5}
+          >
+            <Icon icon={"mdi:information-outline"} color={yellow[700]} />
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              marginLeft={0.5}
+            >
+              changer ce paramètre réinitialisera les joueurs et les matchs
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={12} lg={8}>
         <Typography paragraph gutterBottom>
           Un tournoi à la mêlée, parfois appelé tournoi de "mêlée" ou "mixte",
           est une variante de compétition sportive où les équipes sont
@@ -139,11 +170,12 @@ export default function HomePage() {
             habituelles du jeu sont respectées.
           </ListItem>
           <ListItem sx={{ display: "list-item" }}>
-            Classement et progression : Selon le format du tournoi, les équipes
-            peuvent accumuler des points au fil des matchs. À la fin du tournoi,
-            les équipes avec le plus grand nombre de points ou les meilleures
-            performances peuvent passer aux étapes suivantes ou être déclarées
-            vainqueurs du tournoi.
+            Classement et progression : Les joueurs accumulent des points au fil
+            des matchs. À chaque match joué, chaque joueur accumule en cas de
+            victoire ou encaisse en cas défaite la différence de points entre
+            les deux équipes. À la fin du tournoi, les joueurs avec le plus
+            grand nombre de points ou les meilleures performances peuvent être
+            déclarées vainqueurs du tournoi.
           </ListItem>
         </List>
         <Typography paragraph gutterBottom>

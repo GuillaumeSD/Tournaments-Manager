@@ -11,7 +11,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Tournament manager</title>
+        <title>Tournament Manager</title>
       </Head>
       <TournamentProvider>
         <Layout>

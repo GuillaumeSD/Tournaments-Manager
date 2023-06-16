@@ -1,9 +1,12 @@
 import { Match, Player, Round, Team } from "../types/tournamentTypes";
 import { shuffleArray } from "./array";
 
-const initPlayersByPools = (players: Player[]): Player[][] => {
+const initPlayersByPools = (
+  maxPoolNb: number,
+  players: Player[]
+): Player[][] => {
   const playersByPool = [];
-  for (let pool = 0; pool <= 6; pool++) {
+  for (let pool = 1; pool <= maxPoolNb; pool++) {
     const playersInPool = players.filter((player) => player.pool === pool);
     shuffleArray(playersInPool);
     playersByPool.push(playersInPool);
@@ -58,21 +61,24 @@ const buildMatches = (teams: Team[]): Match[] => {
 
 export const buildNewRound = (
   players: Player[],
-  matchesNb: number
+  matchesNb: number,
+  playersNbPerTeam: number
 ): Omit<Round, "id"> => {
+  const maxPoolNb = playersNbPerTeam; // just for code clarity
+
   const teams = initTeams(matchesNb);
 
-  const playersByPool = initPlayersByPools(players);
+  const playersByPool = initPlayersByPools(maxPoolNb, players);
 
   let teamId = 0;
   let poolId = 0;
 
-  while (poolId < 6) {
-    while (poolId < 5 && playersByPool[poolId].length === 0) {
+  while (poolId < maxPoolNb) {
+    while (poolId < maxPoolNb - 1 && playersByPool[poolId].length === 0) {
       poolId++;
     }
     let scopePoolId = poolId;
-    while (teamId < teams.length && scopePoolId < 6) {
+    while (teamId < teams.length && scopePoolId < maxPoolNb) {
       const player = playersByPool[scopePoolId].shift();
       if (player) {
         teams[teamId].players.push(player.id);
@@ -87,7 +93,7 @@ export const buildNewRound = (
 
   while (
     playersByPool.some((pool) => pool.length > 0) &&
-    teams.some((team) => team.players.length < 6)
+    teams.some((team) => team.players.length < playersNbPerTeam)
   ) {
     let currentPoolId = playersByPool.reduce((acc, pool, index) => {
       if (playersByPool[acc].length > pool.length) {
@@ -100,7 +106,7 @@ export const buildNewRound = (
     );
     currentTeamStartId = currentTeamStartId > 0 ? currentTeamStartId : 0;
     for (let i = currentTeamStartId; i < teams.length; i++) {
-      if (teams[i].players.length === 6) continue;
+      if (teams[i].players.length === playersNbPerTeam) continue;
 
       let player = playersByPool[currentPoolId].shift();
       if (!player) {
