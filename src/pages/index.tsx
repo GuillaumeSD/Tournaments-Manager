@@ -1,3 +1,4 @@
+import { useTournament } from "@/contexts/tournamentContext";
 import {
   Autocomplete,
   FormControl,
@@ -10,11 +11,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 
 export default function HomePage() {
-  const [fieldNb, setFieldNb] = useState(6);
-  const [playerNbByTeam, setPlayerNbByTeam] = useState(6);
+  const { fieldNb, setFieldNb, playerNbByTeam, setPlayerNbByTeam } =
+    useTournament();
 
   return (
     <Grid
@@ -74,7 +74,7 @@ export default function HomePage() {
             )}
             value={fieldNb}
             getOptionLabel={(option) => option.toString()}
-            onChange={(_, val) => setFieldNb(val ?? 6)}
+            onChange={(_, val) => setFieldNb?.(val ?? 6)}
             sx={{ maxWidth: "20em" }}
             fullWidth
           />
@@ -98,7 +98,7 @@ export default function HomePage() {
             )}
             value={playerNbByTeam}
             getOptionLabel={(option) => option.toString()}
-            onChange={(_, val) => setPlayerNbByTeam(val ?? 6)}
+            onChange={(_, val) => setPlayerNbByTeam?.(val ?? 6)}
             sx={{ maxWidth: "20em" }}
             fullWidth
           />
