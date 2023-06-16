@@ -2,12 +2,12 @@ import { buildNewRound } from "../helpers/round";
 import { createDatabase } from "../helpers/localDatabase";
 import { Player, Round } from "../types/tournamentTypes";
 import { createContext, useContext } from "react";
-import { v4 as uuid } from "uuid";
 import { useLocalStorage } from "@/helpers/localStorage";
+import { v4 as uuidv4 } from "uuid";
 
 export type TournamentContextType = {
   players: Record<string, Player | undefined>;
-  addPlayer: (player: Omit<Player, "id">) => void;
+  addPlayer: (player: Omit<Player, "id" | "score">) => void;
   setPlayer: (player: Player) => void;
   removePlayer: (playerId: string) => void;
   rounds: Record<string, Round | undefined>;
@@ -43,9 +43,9 @@ export function TournamentProvider({
     reset: resetPlayers,
   } = createDatabase<Player>("TournamentPlayers");
 
-  const addPlayer = (player: Omit<Player, "id">) => {
-    const id = uuid();
-    setPlayer({ ...player, id });
+  const addPlayer = (player: Omit<Player, "id" | "score">) => {
+    const id = uuidv4();
+    setPlayer({ ...player, id, score: 0 });
   };
 
   const {

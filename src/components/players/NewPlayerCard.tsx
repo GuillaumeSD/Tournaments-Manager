@@ -39,7 +39,6 @@ export default function NewPlayerDialog({ open, onClose }: Props) {
     addPlayer({
       name,
       pool,
-      score: 0,
     });
     handleClose();
   };

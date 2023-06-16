@@ -100,13 +100,17 @@ export const buildNewRound = (
     );
     currentTeamStartId = currentTeamStartId > 0 ? currentTeamStartId : 0;
     for (let i = currentTeamStartId; i < teams.length; i++) {
-      const player = playersByPool[currentPoolId].shift();
-      if (player) {
-        teams[i].players.push(player.id);
-        continue;
+      if (teams[i].players.length === 6) continue;
+
+      let player = playersByPool[currentPoolId].shift();
+      if (!player) {
+        currentPoolId = getNearestPoolId(playersByPool, currentPoolId);
+        if (currentPoolId < 0) break;
+        player = playersByPool[currentPoolId].shift();
       }
-      currentPoolId = getNearestPoolId(playersByPool, currentPoolId);
-      if (currentPoolId < 0) break;
+
+      if (!player) break;
+      teams[i].players.push(player.id);
     }
   }
 
