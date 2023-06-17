@@ -42,15 +42,15 @@ export default function Players() {
     const player = {
       id: newRow.id,
       name: newRow.name,
-      pool: newRow.pool,
+      level: newRow.level,
       score: newRow.score,
     } as Player;
     if (!player.name) {
       alert("Le nom du joueur est obligatoire !");
       return oldRow;
     }
-    if (!player.pool || player.pool < 1 || player.pool > 6) {
-      alert("La poule du joueur doit être comprise entre 1 et 6 !");
+    if (!player.level || player.level < 1 || player.level > 6) {
+      alert("Le niveau du joueur doit être compris entre 1 et 6 !");
       return oldRow;
     }
     setPlayer(player);
@@ -65,8 +65,8 @@ export default function Players() {
       editable: true,
     },
     {
-      field: "pool",
-      headerName: "Poule",
+      field: "level",
+      headerName: "Niveau",
       type: "number",
       width: 90,
       editable: true,

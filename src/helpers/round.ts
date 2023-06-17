@@ -7,7 +7,7 @@ const initPlayersByPools = (
 ): Player[][] => {
   const playersByPool = [];
   for (let pool = 1; pool <= maxPoolNb; pool++) {
-    const playersInPool = players.filter((player) => player.pool === pool);
+    const playersInPool = players.filter((player) => player.level === pool);
     shuffleArray(playersInPool);
     playersByPool.push(playersInPool);
   }

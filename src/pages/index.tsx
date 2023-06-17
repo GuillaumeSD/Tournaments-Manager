@@ -101,13 +101,13 @@ export default function HomePage() {
           alignItems="center"
         >
           <Autocomplete
-            options={[...Array(13).keys()].slice(1)}
+            options={[...Array(21).keys()].slice(1)}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Nombre max de joueurs par équipe"
                 type="number"
-                inputProps={{ ...params.inputProps, min: 1, max: 12 }}
+                inputProps={{ ...params.inputProps, min: 1, max: 20 }}
               />
             )}
             value={playersNbByTeam}

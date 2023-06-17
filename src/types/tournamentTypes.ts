@@ -2,7 +2,7 @@ export interface Player {
   id: string;
   name: string;
   score: number;
-  pool: number;
+  level: number;
 }
 
 export interface Team {

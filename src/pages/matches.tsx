@@ -15,8 +15,7 @@ export default function Matches() {
 
   const handleNextRoundClick = () => {
     if (!setNewRound || !rounds) {
-      console.error("setNewRound is not defined");
-      return;
+      throw new Error("setNewRound or rounds is not defined");
     }
     const nextRoundNb = roundNb + 1;
     const nextRound = rounds[nextRoundNb.toString()];

@@ -24,6 +24,7 @@
     "quotes": ["error", "double"],
     "prettier/prettier": ["error", {"endOfLine": "auto"}],
     "require-jsdoc": "off",
-    "@typescript-eslint/no-unused-vars": "error"
+    "@typescript-eslint/no-unused-vars": "error",
+    "react/no-unescaped-entities": 0
   }
 }

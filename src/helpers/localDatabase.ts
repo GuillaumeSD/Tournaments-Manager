@@ -1,6 +1,6 @@
 import { useLocalStorage } from "./localStorage";
 
-export function createDatabase<T extends { id: string }>(
+export function useLocalDatabase<T extends { id: string }>(
   localStorageKey: string
 ): {
   elements: Record<string, T | undefined>;
@@ -18,6 +18,7 @@ export function createDatabase<T extends { id: string }>(
 
   const remove = (elementId: string) => {
     setElements((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [elementId]: _, ...rest } = prev;
       return rest;
     });

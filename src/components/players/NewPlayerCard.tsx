@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   open: boolean;
@@ -23,29 +23,35 @@ interface Props {
 
 export default function NewPlayerDialog({ open, onClose }: Props) {
   const [name, setName] = useState("");
-  const [pool, setPool] = useState<number | "">("");
-  const { addPlayer } = useTournament();
+  const [level, setLevel] = useState<number | "">("");
+  const { addPlayer, playersNbByTeam } = useTournament();
+
+  useEffect(() => {
+    if (playersNbByTeam === 1) setLevel(1);
+  }, [playersNbByTeam]);
 
   const handleAddPlayer = () => {
-    if (!addPlayer) throw new Error("Unable to add player");
+    if (!addPlayer || !playersNbByTeam) throw new Error("Unable to add player");
     if (!name) {
       alert("Le nom du joueur est obligatoire !");
       throw new Error("Player name is invalid");
     }
-    if (!pool || pool < 1 || pool > 6) {
-      alert("La poule du joueur doit être comprise entre 1 et 6 !");
+    if (!level || level < 1 || level > playersNbByTeam) {
+      alert(
+        `Le niveau du joueur doit être compris entre 1 et ${playersNbByTeam} !`
+      );
       throw new Error("Player pool is invalid");
     }
     addPlayer({
       name,
-      pool,
+      level,
     });
     handleClose();
   };
 
   const handleClose = () => {
     setName("");
-    setPool("");
+    playersNbByTeam === 1 ? setLevel(1) : setLevel("");
     onClose();
   };
 
@@ -54,10 +60,12 @@ export default function NewPlayerDialog({ open, onClose }: Props) {
       <DialogTitle>Ajouter un joueur</DialogTitle>
       <DialogContent>
         <Typography paragraph>
-          {`La poule 1 est considérée comme la poule la plus forte et la poule 6
-          la plus faible. Il n'est pas nécessaire d'utiliser toutes les poules
-          de 1 à 6, par exemple on pourrait utiliser seulement les poules 1 et
-          2.`}
+          {playersNbByTeam &&
+            playersNbByTeam > 1 &&
+            `Le niveau 1 est considéré comme le niveau le plus fort et le niveau ${playersNbByTeam} le plus faible. Il n'est pas nécessaire d'utiliser toutes les poules de 1 à ${playersNbByTeam}.`}
+          {playersNbByTeam &&
+            playersNbByTeam > 2 &&
+            " Par exemple on pourrait utiliser seulement les poules 1 et 2."}
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
           <FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -69,25 +77,29 @@ export default function NewPlayerDialog({ open, onClose }: Props) {
             />
           </FormControl>
           <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="dialog-select-label">Poule</InputLabel>
+            <InputLabel id="dialog-select-label">Niveau</InputLabel>
             <Select
               labelId="dialog-select-label"
               id="dialog-select"
               displayEmpty
-              input={<OutlinedInput label="Poule" />}
-              value={pool}
+              input={<OutlinedInput label="Niveau" />}
+              value={level}
               onChange={(e) => {
                 if (typeof e.target.value === "string") {
                   throw new Error("Invalid value");
                 }
-                setPool(e.target.value);
+                setLevel(e.target.value);
               }}
             >
-              {[null, 1, 2, 3, 4, 5, 6].map((poule) => (
-                <MenuItem value={poule ?? ""} key={poule ?? "empty-val"}>
-                  {poule ?? "Poule"}
-                </MenuItem>
-              ))}
+              <MenuItem value={""} key={"empty-val"}>
+                Niveau
+              </MenuItem>
+              {playersNbByTeam &&
+                [...Array(playersNbByTeam + 1).keys()].slice(1).map((lvl) => (
+                  <MenuItem value={lvl} key={lvl}>
+                    {lvl}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </Box>
