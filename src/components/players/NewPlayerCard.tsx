@@ -90,6 +90,7 @@ export default function NewPlayerDialog({ open, onClose }: Props) {
                 }
                 setLevel(e.target.value);
               }}
+              disabled={playersNbByTeam === 1}
             >
               <MenuItem value={""} key={"empty-val"}>
                 Niveau
