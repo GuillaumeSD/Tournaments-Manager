@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint && tsc --noEmit"
+    "lint": "next lint && tsc --noEmit",
+    "deploy": "firebase deploy --project=tournaments-manager-1 --only hosting"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

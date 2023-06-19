@@ -4,7 +4,7 @@ This project is a tournaments manager web app. It allows you to create tournamen
 
 It is built with [Next.js](https://nextjs.org/docs), [React](https://react.dev/learn/describing-the-ui), [Material UI](https://mui.com/material-ui/getting-started/overview/), and [TypeScript](https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html).
 
-It is deployed on [Firebase](https://firebase.google.com/docs/hosting/quickstart), you can see it live here(upcoming).
+It is deployed on [Firebase](https://firebase.google.com/docs/hosting/quickstart), you can see it live [here](https://tournaments-manager.web.app/).
 
 ## Getting Started
 
