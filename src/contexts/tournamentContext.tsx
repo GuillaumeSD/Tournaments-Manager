@@ -1,7 +1,7 @@
 import { buildNewRound } from "../helpers/round";
 import { useLocalDatabase } from "../helpers/localDatabase";
 import { Player, Round } from "../types/tournamentTypes";
-import { createContext, useContext, useEffect } from "react";
+import { PropsWithChildren, createContext, useContext, useEffect } from "react";
 import { useLocalStorage } from "@/helpers/localStorage";
 import { v4 as uuidv4 } from "uuid";
 
@@ -35,11 +35,7 @@ export function useTournament() {
   return useContext(TournamentContext);
 }
 
-export function TournamentProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function TournamentProvider({ children }: PropsWithChildren) {
   const [matchesNb, setMatchesNb] = useLocalStorage("matchesNb", 6);
   const [playersNbByTeam, setPlayersNbByTeam] = useLocalStorage(
     "playersNbByTeam",
