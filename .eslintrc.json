@@ -21,7 +21,7 @@
   "ignorePatterns": [".out/*"],
   "plugins": ["@typescript-eslint", "import", "prettier"],
   "rules": {
-    "quotes": ["error", "double"],
+    "quotes": ["error", "double", { "avoidEscape": true }],
     "prettier/prettier": ["error", {"endOfLine": "auto"}],
     "require-jsdoc": "off",
     "@typescript-eslint/no-unused-vars": "error",

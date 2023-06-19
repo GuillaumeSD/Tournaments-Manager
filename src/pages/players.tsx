@@ -15,6 +15,7 @@ import {
 import NewPlayerDialog from "../components/NewPlayerCard";
 import { useMemo, useState } from "react";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
+import { red } from "@mui/material/colors";
 
 const gridLocaleText: GridLocaleText = {
   ...GRID_DEFAULT_LOCALE_TEXT,
@@ -101,7 +102,7 @@ export default function Players() {
           return [
             <GridActionsCellItem
               icon={
-                <Icon icon="mdi:delete-outline" color="error" width="20px" />
+                <Icon icon="mdi:delete-outline" color={red[400]} width="20px" />
               }
               label="Supprimer"
               onClick={handleDeleteClick(id)}
