@@ -149,6 +149,7 @@ export function TournamentProvider({
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rounds]);
 
   const setMatchScore = (

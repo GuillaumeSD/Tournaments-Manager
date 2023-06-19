@@ -44,7 +44,7 @@ export default function ScoreInput({ score, setScore, color }: Props) {
         />
       )}
       getOptionLabel={(option) => option.toString()}
-      filterOptions={(options, _) => options}
+      filterOptions={(options) => options}
       inputValue={score.toString()}
       onInputChange={(_, value) => setScore(Number(value))}
       forcePopupIcon={false}
