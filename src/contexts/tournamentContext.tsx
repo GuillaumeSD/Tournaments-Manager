@@ -1,13 +1,13 @@
 import { buildNewRound } from "../helpers/round";
 import { useLocalDatabase } from "../helpers/localDatabase";
 import { Player, Round } from "../types/tournamentTypes";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { useLocalStorage } from "@/helpers/localStorage";
 import { v4 as uuidv4 } from "uuid";
 
 export type TournamentContextType = {
   players: Record<string, Player | undefined>;
-  addPlayer: (player: Omit<Player, "id" | "score">) => void;
+  addPlayer: (player: { name: string; level: number }) => void;
   setPlayer: (player: Player) => void;
   removePlayer: (playerId: string) => void;
   rounds: Record<string, Round | undefined>;
@@ -49,9 +49,16 @@ export function TournamentProvider({
     reset: resetPlayers,
   } = useLocalDatabase<Player>("TournamentPlayers");
 
-  const addPlayer = (player: Omit<Player, "id" | "score">) => {
+  const addPlayer = (player: { name: string; level: number }) => {
     const id = uuidv4();
-    setPlayer({ ...player, id, score: 0 });
+    setPlayer({
+      ...player,
+      id,
+      score: 0,
+      scoreDiff: 0,
+      matchesPlayed: 0,
+      matchesWon: 0,
+    });
   };
 
   const {
@@ -80,6 +87,42 @@ export function TournamentProvider({
     setPlayersNbByTeam(newValue);
   };
 
+  useEffect(() => {
+    for (const player of Object.values(players)) {
+      if (!player) continue;
+      player.score = 0;
+      player.scoreDiff = 0;
+      player.matchesPlayed = 0;
+      player.matchesWon = 0;
+      setPlayer(player);
+    }
+
+    for (const round of Object.values(rounds)) {
+      if (!round) continue;
+
+      for (const match of round.matches) {
+        if (match.score[0] === 0 && match.score[1] === 0) continue;
+        const scoreDiff = Math.abs(match.score[0] - match.score[1]);
+        const winningTeam =
+          scoreDiff === 0 ? -1 : match.score[0] > match.score[1] ? 0 : 1;
+
+        for (const [teamId, team] of match.teams.entries()) {
+          for (const playerId of team.players) {
+            const player = players[playerId];
+            if (!player) continue;
+
+            player.score += match.score[teamId];
+            const playerWon = teamId === winningTeam;
+            player.scoreDiff += playerWon ? scoreDiff : -scoreDiff;
+            player.matchesPlayed++;
+            if (playerWon) player.matchesWon++;
+            setPlayer(player);
+          }
+        }
+      }
+    }
+  }, [rounds]);
+
   const setMatchScore = (
     roundId: string,
     matchId: number,
@@ -98,17 +141,12 @@ export function TournamentProvider({
     const newScore: [number, number] =
       teamIdx === 0 ? [score, match.score[1]] : [match.score[0], score];
 
-    const newMatches = [...round.matches];
-    newMatches[matchId] = {
+    round.matches[matchId] = {
       ...match,
       score: newScore,
     };
 
-    const newRound = {
-      ...round,
-      matches: newMatches,
-    };
-    setRound(newRound);
+    setRound(round);
   };
 
   const value: TournamentContextType = {

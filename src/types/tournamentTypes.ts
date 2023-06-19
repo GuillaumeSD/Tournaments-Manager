@@ -1,8 +1,11 @@
 export interface Player {
   id: string;
   name: string;
-  score: number;
   level: number;
+  score: number;
+  scoreDiff: number;
+  matchesPlayed: number;
+  matchesWon: number;
 }
 
 export interface Team {
