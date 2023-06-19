@@ -14,7 +14,7 @@ import {
 } from "@mui/x-data-grid";
 import NewPlayerDialog from "../components/NewPlayerCard";
 import { useMemo, useState } from "react";
-import { red } from "@mui/material/colors";
+import ConfirmationDialog from "@/components/ConfirmationDialog";
 
 const gridLocaleText: GridLocaleText = {
   ...GRID_DEFAULT_LOCALE_TEXT,
@@ -29,8 +29,10 @@ const handleRowEdit: GridEventListener<"rowEditStart" | "rowEditStop"> = (
 };
 
 export default function Players() {
-  const { players, removePlayer, setPlayer } = useTournament();
+  const { players, removePlayer, setPlayer, tournamentReset } = useTournament();
   const [openNewPlayerDialog, setOpenNewPlayerDialog] = useState(false);
+  const [openResetTournamentDialog, setOpenResetTournamentDialog] =
+    useState(false);
 
   const handleDeleteClick = useMemo(
     () => (id: GridRowId) => () => {
@@ -82,10 +84,10 @@ export default function Players() {
         headerAlign: "center",
       },
       {
-        field: "score",
-        headerName: "Points",
+        field: "matchesPlayed",
+        headerName: "Matchs joués",
         type: "number",
-        width: 90,
+        width: 110,
         align: "center",
         headerAlign: "center",
       },
@@ -99,7 +101,7 @@ export default function Players() {
           return [
             <GridActionsCellItem
               icon={
-                <Icon icon="mdi:delete-outline" color={red[400]} width="20px" />
+                <Icon icon="mdi:delete-outline" color="error" width="20px" />
               }
               label="Supprimer"
               onClick={handleDeleteClick(id)}
@@ -115,21 +117,47 @@ export default function Players() {
 
   return (
     <>
-      <Grid container spacing={4} justifyContent="center" alignItems="center">
+      <Grid
+        container
+        rowSpacing={4}
+        justifyContent="center"
+        alignItems="center"
+      >
         <Grid
           item
           container
           xs={12}
           justifyContent="center"
           alignItems="center"
-          marginTop={1}
+          spacing={4}
         >
-          <Button
-            variant="contained"
-            onClick={() => setOpenNewPlayerDialog(true)}
+          <Grid
+            item
+            container
+            justifyContent="center"
+            sx={{ maxWidth: "250px" }}
           >
-            Ajouter un joueur
-          </Button>
+            <Button
+              variant="contained"
+              onClick={() => setOpenNewPlayerDialog(true)}
+            >
+              Ajouter un joueur
+            </Button>
+          </Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            sx={{ maxWidth: "300px" }}
+          >
+            <Button
+              variant="outlined"
+              onClick={() => setOpenResetTournamentDialog(true)}
+              color="error"
+            >
+              Supprimer tous les joueurs
+            </Button>
+          </Grid>
         </Grid>
         <Grid item maxWidth="100%" sx={{ minWidth: "50px" }}>
           <DataGrid
@@ -150,6 +178,13 @@ export default function Players() {
       <NewPlayerDialog
         open={openNewPlayerDialog}
         onClose={() => setOpenNewPlayerDialog(false)}
+      />
+      <ConfirmationDialog
+        title="Supprimer tous les joueurs ?"
+        description="Voulez-vous vraiment supprimer tous les joueurs ? Cette action est irréversible."
+        open={openResetTournamentDialog}
+        onClose={() => setOpenResetTournamentDialog(false)}
+        onConfirm={() => tournamentReset?.()}
       />
     </>
   );

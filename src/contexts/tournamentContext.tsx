@@ -10,8 +10,12 @@ export type TournamentContextType = {
   addPlayer: (player: { name: string; level: number }) => void;
   setPlayer: (player: Player) => void;
   removePlayer: (playerId: string) => void;
-  rounds: Record<string, Round | undefined>;
+  currentRound: Round | undefined;
+  currentRoundNb: number;
   setNewRound: (roundId: string) => void;
+  goToNextRound: () => void;
+  goToPreviousRound: () => void;
+  resetRounds: () => void;
   tournamentReset: () => void;
   matchesNb: number;
   setMatchesNb: (matchesNb: number) => void;
@@ -40,6 +44,10 @@ export function TournamentProvider({
   const [playersNbByTeam, setPlayersNbByTeam] = useLocalStorage(
     "playersNbByTeam",
     6
+  );
+  const [currentRoundNb, setCurrentRoundNb] = useLocalStorage(
+    "currentRoundNb",
+    1
   );
 
   const {
@@ -76,8 +84,28 @@ export function TournamentProvider({
     setRound({ ...newRound, id: roundId });
   };
 
-  const tournamentReset = () => {
+  const goToNextRound = () => {
+    const nextRoundNb = currentRoundNb + 1;
+    const nextRoundId = nextRoundNb.toString();
+    const nextRound = rounds[nextRoundId];
+    if (!nextRound) {
+      setNewRound(nextRoundId);
+    }
+    setCurrentRoundNb(nextRoundNb);
+  };
+
+  const goToPreviousRound = () => {
+    if (currentRoundNb < 2) return;
+    setCurrentRoundNb((prev) => prev - 1);
+  };
+
+  const handleResetRounds = () => {
     resetRounds();
+    setCurrentRoundNb(1);
+  };
+
+  const tournamentReset = () => {
+    handleResetRounds();
     resetPlayers();
   };
 
@@ -154,8 +182,12 @@ export function TournamentProvider({
     addPlayer,
     setPlayer,
     removePlayer,
-    rounds,
+    currentRound: rounds[currentRoundNb.toString()],
+    currentRoundNb,
     setNewRound,
+    goToNextRound,
+    goToPreviousRound,
+    resetRounds: handleResetRounds,
     tournamentReset,
     matchesNb,
     setMatchesNb,

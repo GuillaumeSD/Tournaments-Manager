@@ -74,6 +74,7 @@ const columns: GridColDef<Player>[] = [
 
 export default function Ranking() {
   const { players } = useTournament();
+
   return (
     <Grid container justifyContent="center" alignItems="center" marginTop={1}>
       <Grid item maxWidth="100%" sx={{ minWidth: "50px" }}>

@@ -47,7 +47,7 @@ export default function NavBar({ darkMode, switchDarkMode }: Props) {
           <IconButton
             color="inherit"
             onClick={() =>
-              window.open("https://github.com/GuillaumeSD/tournaments")
+              window.open("https://github.com/GuillaumeSD/Tournaments-Manager")
             }
           >
             <Icon icon="mdi:github" />

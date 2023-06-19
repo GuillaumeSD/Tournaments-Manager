@@ -2,6 +2,7 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useMemo } from "react";
 import NavBar from "./NavBar";
 import { useLocalStorage } from "../../helpers/localStorage";
+import { red } from "@mui/material/colors";
 
 export default function Layout({ children }: { children?: React.ReactNode }) {
   const [useDarkMode, setDarkMode] = useLocalStorage("useDarkMode", false);
@@ -11,6 +12,9 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
       createTheme({
         palette: {
           mode: useDarkMode ? "dark" : "light",
+          error: {
+            main: red[400],
+          },
         },
       }),
     [useDarkMode]

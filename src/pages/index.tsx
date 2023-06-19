@@ -135,7 +135,13 @@ export default function HomePage() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12} lg={8}>
+      <Grid
+        item
+        xs={12}
+        lg={8}
+        sx={{ textAlign: "justify" }}
+        paddingRight={{ lg: 1 }}
+      >
         <Typography paragraph gutterBottom>
           Un tournoi à la mêlée, parfois appelé tournoi de "mêlée" ou "mixte",
           est une variante de compétition sportive où les équipes sont
@@ -148,28 +154,29 @@ export default function HomePage() {
           sx={{
             listStyleType: "decimal",
             listStylePosition: "inside",
+            textAlign: "inherit",
           }}
         >
-          <ListItem sx={{ display: "list-item" }}>
+          <ListItem sx={{ display: "list-item", textAlign: "inherit" }}>
             Formation des équipes : Les participants inscrits au tournoi sont
             assignés à des équipes aléatoires à chaque match en tenant compte de
             leur niveau relatif. Cette approche favorise le mélange des
             compétences et encourage l'esprit d'équipe.
           </ListItem>
-          <ListItem sx={{ display: "list-item" }}>
+          <ListItem sx={{ display: "list-item", textAlign: "inherit" }}>
             Rotation des équipes : À chaque match, les équipes sont
             réorganisées, de sorte que vous jouerez avec de nouveaux coéquipiers
             à chaque rencontre. Par exemple, si vous faites partie d'une équipe
             spécifique lors du premier match, vous serez ensuite réassigné à une
             nouvelle équipe pour le deuxième match, et ainsi de suite.
           </ListItem>
-          <ListItem sx={{ display: "list-item" }}>
+          <ListItem sx={{ display: "list-item", textAlign: "inherit" }}>
             Règles du jeu : Les règles du sport en question s'appliquent
             normalement lors d'un tournoi à la mêlée. Que ce soit le volleyball,
             le football, le basketball, le rugby ou tout autre sport, les règles
             habituelles du jeu sont respectées.
           </ListItem>
-          <ListItem sx={{ display: "list-item" }}>
+          <ListItem sx={{ display: "list-item", textAlign: "inherit" }}>
             Classement et progression : Les joueurs accumulent des points au fil
             des matchs. À chaque match joué, chaque joueur accumule en cas de
             victoire ou encaisse en cas défaite la différence de points entre
