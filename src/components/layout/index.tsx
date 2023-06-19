@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useMemo } from "react";
-import NavBar from "./navBar";
+import NavBar from "./NavBar";
 import { useLocalStorage } from "../../helpers/localStorage";
 
 export default function Layout({ children }: { children?: React.ReactNode }) {

@@ -12,6 +12,7 @@ export interface Team {
 
 export interface Match {
   id: number;
+  score: [number, number];
   teams: [Team, Team];
 }
 

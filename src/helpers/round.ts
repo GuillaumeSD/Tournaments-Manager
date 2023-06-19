@@ -52,6 +52,7 @@ const buildMatches = (teams: Team[]): Match[] => {
   for (let i = 0; i < teams.length; i += 2) {
     const match: Match = {
       id: i / 2,
+      score: [0, 0],
       teams: [teams[i], teams[i + 1]],
     };
     matches.push(match);

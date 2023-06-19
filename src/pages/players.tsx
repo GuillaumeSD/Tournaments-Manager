@@ -12,7 +12,7 @@ import {
   GridRowId,
   GridRowModel,
 } from "@mui/x-data-grid";
-import NewPlayerDialog from "../components/players/NewPlayerCard";
+import NewPlayerDialog from "../components/NewPlayerCard";
 import { useState } from "react";
 
 const gridLocaleText: GridLocaleText = {

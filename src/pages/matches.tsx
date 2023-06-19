@@ -1,4 +1,4 @@
-import MatchPaper from "../components/matchPaper";
+import MatchPaper from "../components/MatchPaper";
 import { useTournament } from "../contexts/tournamentContext";
 import { Icon } from "@iconify/react";
 import { Button, Grid, IconButton, Typography } from "@mui/material";
@@ -91,7 +91,7 @@ export default function Matches() {
       >
         {currentRound?.matches.map((match) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={match.id}>
-            <MatchPaper match={match} />
+            <MatchPaper match={match} roundId={currentRound.id} />
           </Grid>
         ))}
       </Grid>

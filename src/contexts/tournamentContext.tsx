@@ -17,6 +17,12 @@ export type TournamentContextType = {
   setMatchesNb: (matchesNb: number) => void;
   playersNbByTeam: number;
   setPlayersNbByTeam: (playersNbByTeam: number) => void;
+  setMatchScore: (
+    roundId: string,
+    matchId: number,
+    teamIdx: number,
+    score: number
+  ) => void;
 };
 
 const TournamentContext = createContext<Partial<TournamentContextType>>({});
@@ -74,6 +80,37 @@ export function TournamentProvider({
     setPlayersNbByTeam(newValue);
   };
 
+  const setMatchScore = (
+    roundId: string,
+    matchId: number,
+    teamIdx: number,
+    score: number
+  ) => {
+    if (score < 0) score = 0;
+    if (score > 99) score = 99;
+
+    const round = rounds[roundId];
+    if (!round) return;
+
+    const match = round.matches[matchId];
+    if (!match) return;
+
+    const newScore: [number, number] =
+      teamIdx === 0 ? [score, match.score[1]] : [match.score[0], score];
+
+    const newMatches = [...round.matches];
+    newMatches[matchId] = {
+      ...match,
+      score: newScore,
+    };
+
+    const newRound = {
+      ...round,
+      matches: newMatches,
+    };
+    setRound(newRound);
+  };
+
   const value: TournamentContextType = {
     players,
     addPlayer,
@@ -86,6 +123,7 @@ export function TournamentProvider({
     setMatchesNb,
     playersNbByTeam,
     setPlayersNbByTeam: handleSetPlayersNbByTeam,
+    setMatchScore,
   };
 
   return (

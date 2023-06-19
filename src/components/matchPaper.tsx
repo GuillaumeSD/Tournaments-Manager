@@ -1,33 +1,20 @@
 import { blue, green } from "@mui/material/colors";
-import { useTournament } from "../contexts/tournamentContext";
 import { Match } from "../types/tournamentTypes";
 import { Divider, Grid, Paper, Typography } from "@mui/material";
+import ScoreInput from "./ScoreInput";
+import PlayerName from "./PlayerName";
+import { useTournament } from "@/contexts/tournamentContext";
 
-export default function MatchPaper({ match }: { match: Match }) {
-  const { players } = useTournament();
+const team1Color = green[600];
+const team2Color = blue[600];
 
-  if (!players) return null;
+type Props = {
+  match: Match;
+  roundId: string;
+};
 
-  const playerItem = (playerId: string, color: string) => (
-    <Grid
-      item
-      container
-      xs={4}
-      key={playerId}
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Typography
-        align="center"
-        color={color}
-        width={100}
-        noWrap
-        fontWeight={"bold"}
-      >
-        {players[playerId]?.name}
-      </Typography>
-    </Grid>
-  );
+export default function MatchPaper({ match, roundId }: Props) {
+  const { setMatchScore } = useTournament();
 
   return (
     <Paper elevation={3}>
@@ -44,17 +31,48 @@ export default function MatchPaper({ match }: { match: Match }) {
           </Typography>
         </Grid>
 
-        {match.teams[0].players.map((playerId) =>
-          playerItem(playerId, green[600])
-        )}
+        {match.teams[0].players.map((playerId) => (
+          <PlayerName playerId={playerId} color={team1Color} key={playerId} />
+        ))}
 
-        <Grid item xs={11}>
-          <Divider>VS</Divider>
+        <Grid
+          item
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          xs={12}
+        >
+          <Grid item xs paddingLeft={2}>
+            <Divider />
+          </Grid>
+
+          <ScoreInput
+            score={match.score[0]}
+            setScore={(score: number) =>
+              setMatchScore?.(roundId, match.id, 0, score)
+            }
+            color={team1Color}
+          />
+
+          <Typography variant="h6">VS</Typography>
+
+          <ScoreInput
+            score={match.score[1]}
+            setScore={(score: number) =>
+              setMatchScore?.(roundId, match.id, 1, score)
+            }
+            color={team2Color}
+          />
+
+          <Grid item xs paddingRight={2}>
+            <Divider />
+          </Grid>
         </Grid>
 
-        {match.teams[1].players.map((playerId) =>
-          playerItem(playerId, blue[600])
-        )}
+        {match.teams[1].players.map((playerId) => (
+          <PlayerName playerId={playerId} color={team2Color} key={playerId} />
+        ))}
       </Grid>
     </Paper>
   );
