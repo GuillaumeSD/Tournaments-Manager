@@ -10,6 +10,8 @@ export type TournamentContextType = {
   addPlayer: (player: { name: string; level: number }) => void;
   setPlayer: (player: Player) => void;
   removePlayer: (playerId: string) => void;
+  playersSelected: string[];
+  setPlayersSelected: (playersSelected: string[]) => void;
   currentRound: Round | undefined;
   currentRoundNb: number;
   setNewRound: (roundId: string) => void;
@@ -53,6 +55,11 @@ export function TournamentProvider({ children }: PropsWithChildren) {
     reset: resetPlayers,
   } = useLocalDatabase<Player>("TournamentPlayers");
 
+  const [playersSelected, setPlayersSelected] = useLocalStorage<string[]>(
+    "playersSelected",
+    []
+  );
+
   const addPlayer = (player: { name: string; level: number }) => {
     const id = uuidv4();
     setPlayer({
@@ -63,6 +70,7 @@ export function TournamentProvider({ children }: PropsWithChildren) {
       matchesPlayed: 0,
       matchesWon: 0,
     });
+    setPlayersSelected((prev) => [...prev, id]);
   };
 
   const {
@@ -72,11 +80,10 @@ export function TournamentProvider({ children }: PropsWithChildren) {
   } = useLocalDatabase<Round>("TournamentRounds");
 
   const setNewRound = (roundId: string) => {
-    const newRound = buildNewRound(
-      Object.values(players) as Player[],
-      matchesNb,
-      playersNbByTeam
+    const roundPlayers = (Object.values(players) as Player[]).filter((player) =>
+      playersSelected.includes(player.id)
     );
+    const newRound = buildNewRound(roundPlayers, matchesNb, playersNbByTeam);
     setRound({ ...newRound, id: roundId });
   };
 
@@ -103,6 +110,7 @@ export function TournamentProvider({ children }: PropsWithChildren) {
   const tournamentReset = () => {
     handleResetRounds();
     resetPlayers();
+    setPlayersSelected([]);
   };
 
   const handleSetPlayersNbByTeam = (newValue: number) => {
@@ -179,6 +187,8 @@ export function TournamentProvider({ children }: PropsWithChildren) {
     addPlayer,
     setPlayer,
     removePlayer,
+    playersSelected,
+    setPlayersSelected,
     currentRound: rounds[currentRoundNb.toString()],
     currentRoundNb,
     setNewRound,

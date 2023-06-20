@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { useTournament } from "../contexts/tournamentContext";
 import { Player } from "../types/tournamentTypes";
 import { Icon } from "@iconify/react";
@@ -30,7 +30,14 @@ const handleRowEdit: GridEventListener<"rowEditStart" | "rowEditStop"> = (
 };
 
 export default function Players() {
-  const { players, removePlayer, setPlayer, tournamentReset } = useTournament();
+  const {
+    players,
+    removePlayer,
+    setPlayer,
+    tournamentReset,
+    playersSelected,
+    setPlayersSelected,
+  } = useTournament();
   const [openNewPlayerDialog, setOpenNewPlayerDialog] = useState(false);
   const [openResetTournamentDialog, setOpenResetTournamentDialog] =
     useState(false);
@@ -120,7 +127,7 @@ export default function Players() {
     <>
       <Grid
         container
-        rowSpacing={4}
+        rowSpacing={3}
         justifyContent="center"
         alignItems="center"
       >
@@ -160,19 +167,36 @@ export default function Players() {
             </Button>
           </Grid>
         </Grid>
+        <Grid
+          item
+          container
+          xs={12}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Typography variant="subtitle2">
+            Joueurs sélectionnés pour le tournoi :{" "}
+            {playersSelected?.length ?? 0} sur un total de{" "}
+            {Object.keys(players ?? []).length}
+          </Typography>
+        </Grid>
         <Grid item maxWidth="100%" sx={{ minWidth: "50px" }}>
           <DataGrid
             aria-label="Liste des joueurs"
             rows={players ? (Object.values(players) as Player[]) : []}
             columns={columns}
             disableColumnMenu
-            rowSelection={false}
             hideFooter={true}
             autoHeight={true}
             localeText={gridLocaleText}
             onRowEditStart={handleRowEdit}
             onRowEditStop={handleRowEdit}
             processRowUpdate={processRowUpdate}
+            checkboxSelection
+            onRowSelectionModelChange={(newRowSelectionModel) => {
+              setPlayersSelected?.(newRowSelectionModel as string[]);
+            }}
+            rowSelectionModel={playersSelected}
           />
         </Grid>
       </Grid>
