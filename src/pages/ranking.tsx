@@ -16,6 +16,16 @@ const gridLocaleText: GridLocaleText = {
 
 const columns: GridColDef<Player>[] = [
   {
+    field: "rank",
+    headerName: "#",
+    valueGetter: (params) =>
+      params.api.getRowIndexRelativeToVisibleRows(params.row.id) + 1,
+    type: "number",
+    width: 50,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
     field: "name",
     headerName: "Nom du joueur",
     width: 250,
