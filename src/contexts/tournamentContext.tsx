@@ -4,6 +4,7 @@ import { Player, Round } from "../types/tournamentTypes";
 import { PropsWithChildren, createContext, useContext, useEffect } from "react";
 import { useLocalStorage } from "@/helpers/localStorage";
 import { v4 as uuidv4 } from "uuid";
+import { getRacScore } from "@/helpers/score";
 
 export type TournamentContextType = {
   players: Record<string, Player | undefined>;
@@ -69,6 +70,7 @@ export function TournamentProvider({ children }: PropsWithChildren) {
       scoreDiff: 0,
       matchesPlayed: 0,
       matchesWon: 0,
+      racScore: 0,
     });
     setPlayersSelected((prev) => [...prev, id]);
   };
@@ -119,15 +121,20 @@ export function TournamentProvider({ children }: PropsWithChildren) {
     setPlayersNbByTeam(newValue);
   };
 
-  useEffect(() => {
+  const resetPlayersScore = () => {
     for (const player of Object.values(players)) {
       if (!player) continue;
       player.score = 0;
       player.scoreDiff = 0;
       player.matchesPlayed = 0;
       player.matchesWon = 0;
+      player.racScore = 0;
       setPlayer(player);
     }
+  };
+
+  useEffect(() => {
+    resetPlayersScore();
 
     for (const round of Object.values(rounds)) {
       if (!round) continue;
@@ -139,15 +146,16 @@ export function TournamentProvider({ children }: PropsWithChildren) {
           scoreDiff === 0 ? -1 : match.score[0] > match.score[1] ? 0 : 1;
 
         for (const [teamId, team] of match.teams.entries()) {
+          const teamWon = teamId === winningTeam;
           for (const playerId of team.players) {
             const player = players[playerId];
             if (!player) continue;
 
             player.score += match.score[teamId];
-            const playerWon = teamId === winningTeam;
-            player.scoreDiff += playerWon ? scoreDiff : -scoreDiff;
+            player.scoreDiff += teamWon ? scoreDiff : -scoreDiff;
             player.matchesPlayed++;
-            if (playerWon) player.matchesWon++;
+            if (teamWon) player.matchesWon++;
+            player.racScore += getRacScore(teamWon, scoreDiff);
             setPlayer(player);
           }
         }

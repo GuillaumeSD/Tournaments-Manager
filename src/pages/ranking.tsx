@@ -1,4 +1,5 @@
 import { useTournament } from "@/contexts/tournamentContext";
+import { round, sortPlayers } from "@/helpers/score";
 import { Player } from "@/types/tournamentTypes";
 import { Grid } from "@mui/material";
 import {
@@ -33,7 +34,7 @@ const columns: GridColDef<Player>[] = [
     valueGetter: (params) => {
       const player = params.row;
       if (player.matchesPlayed === 0) return 0;
-      return (player.matchesWon / player.matchesPlayed) * 100;
+      return round((player.matchesWon / player.matchesPlayed) * 100, 2);
     },
     type: "number",
     width: 140,
@@ -41,15 +42,10 @@ const columns: GridColDef<Player>[] = [
     headerAlign: "center",
   },
   {
-    field: "score/match",
-    headerName: "Points marqués / match",
-    valueGetter: (params) => {
-      const player = params.row;
-      if (player.matchesPlayed === 0) return 0;
-      return player.score / player.matchesPlayed;
-    },
+    field: "racScore",
+    headerName: "Score",
     type: "number",
-    width: 210,
+    width: 140,
     align: "center",
     headerAlign: "center",
   },
@@ -59,7 +55,7 @@ const columns: GridColDef<Player>[] = [
     valueGetter: (params) => {
       const player = params.row;
       if (player.matchesPlayed === 0) return 0;
-      return player.scoreDiff / player.matchesPlayed;
+      return round(player.scoreDiff / player.matchesPlayed, 2);
     },
     valueFormatter: (params) => {
       const value = params.value as number;
@@ -67,6 +63,19 @@ const columns: GridColDef<Player>[] = [
     },
     type: "number",
     width: 240,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "score/match",
+    headerName: "Points marqués / match",
+    valueGetter: (params) => {
+      const player = params.row;
+      if (player.matchesPlayed === 0) return 0;
+      return round(player.score / player.matchesPlayed, 2);
+    },
+    type: "number",
+    width: 210,
     align: "center",
     headerAlign: "center",
   },
@@ -82,10 +91,14 @@ export default function Ranking() {
           aria-label="Liste des joueurs"
           initialState={{
             sorting: {
-              sortModel: [{ field: "scoreDiff/match", sort: "desc" }],
+              sortModel: [{ field: "racScore", sort: "desc" }],
             },
           }}
-          rows={players ? (Object.values(players) as Player[]) : []}
+          rows={
+            players
+              ? (Object.values(players).sort(sortPlayers) as Player[])
+              : []
+          }
           columns={columns}
           disableColumnMenu
           rowSelection={false}

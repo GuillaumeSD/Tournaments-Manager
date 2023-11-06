@@ -6,6 +6,7 @@ export interface Player {
   scoreDiff: number;
   matchesPlayed: number;
   matchesWon: number;
+  racScore: number;
 }
 
 export interface Team {
